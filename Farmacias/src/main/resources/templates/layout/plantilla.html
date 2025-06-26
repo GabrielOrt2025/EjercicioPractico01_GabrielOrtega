@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:fragment="head">
+        <link rel="stylesheet" href="src/main/resources/static/css/css.css">
+            <title>Árboles</title>
+            <meta charset="UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+            <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+            <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+            <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+            <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    </head>
+
+    <body th:fragment="body" class="d-flex flex-column" style="min-height: 100vh;">
+
+        <header th:fragment="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a th:href="@{/}" class="navbar-brand">Farmacia Heredia</a>
+                    <ul class="navbar-nav d-flex flex-row">
+                        <li class="nav-item px-2">
+                            <a class="nav-link" th:href="@{/farmacia/listado}">Medicamentos</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <h1 class="display-4 mb-4"><strong>Primer caso Practico</strong></h1> 
+        </header>
+
+
+        <main th:fragment="main" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center" style="background-color: black; padding: 20px;">
+            <div class="container">
+
+                <p class="lead mb-4">Video sobre un medicamento</p>
+                <video width="500" height="280" controls>
+                    <source th:src="@{/video/principio-activo.mp4}" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+        </main>
+
+        <footer th:fragment="footer" class="mt-auto p-3" style="background-color: #343a40; color: white;">
+            <div class="container">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="mb-0">&copy; Farmacia Heredia- derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </body>
+</html>
+

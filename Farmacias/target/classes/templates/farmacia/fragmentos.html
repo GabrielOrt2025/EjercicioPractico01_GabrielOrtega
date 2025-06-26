@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Farmacia</title>
+    </head>
+    <body>
+
+        <!-- Botón Agregar -->
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-white shadow-sm border-bottom">
+            <div class="container d-flex justify-content-start">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarCategoria">
+                    <i class="fas fa-plus"></i> [[#{categoria.agregar}]]
+                </button>
+            </div>
+        </section>
+
+        <!-- Modal Agregar Categoría -->
+        <section th:fragment="agregarCategoria">
+            <div id="agregarCategoria" class="modal fade" tabindex="-1" aria-labelledby="agregarCategoriaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title">[[#{categoria.agregar}]]</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <form th:action="@{/farmacia/guardar}" th:object="${farmacia}" method="POST" class="was-validated p-3" enctype="multipart/form-data" novalidate>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">[[#{categoria.nombre}]]</label>
+                                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required />
+                                    <div class="invalid-feedback">Este campo es obligatorio.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">[[#{categoria.descripcion}]]</label>
+                                    <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}" />
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="imagenFile" class="form-label">Imagen del árbol</label>
+                                    <input class="form-control" type="file" name="imagenFile" onchange="readURL(this)" accept="image/*" />
+                                    <img id="blah" alt="Vista previa" class="mt-2 w-100 object-fit-contain" style="display: none; min-height: 180px;" />
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">[[#{accion.guardar}]]</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Listado de Categorías -->
+        <section th:fragment="listadoCategorias" id="farmacias" class="py-5 bg-light">
+            <div class="container">
+                <div class="row g-5 align-items-start">
+                    <!-- Tabla de farmacias -->
+                    <div class="col-lg-8">
+                        <div class="card shadow border-0 rounded-4">
+                            <div class="card-header bg-primary text-white rounded-top">
+                                <h4 class="mb-0 fw-bold">[[#{categoria.listado}]]</h4>
+                            </div>
+                            <div th:if="${farmacias != null and !farmacias.empty}">
+                                <div class="table-responsive">
+                                    <table class="table align-middle table-striped mb-0">
+                                        <thead class="table-primary text-uppercase">
+                                            <tr>
+                                                <th scope="col" style="width: 5%;">#</th>
+                                                <th scope="col">[[#{categoria.nombre}]]</th>
+                                                <th scope="col">[[#{categoria.descripcion}]]</th>
+                                                <th scope="col" style="width: 25%;">[[#{accion.acciones}]]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="farmacia, contador : ${farmacias}">
+                                                <th scope="row" class="text-center">[[${contador.count}]]</th>
+                                                <td class="fw-semibold">[[${farmacia.nombre}]]</td>
+                                                <td class="text-muted fst-italic">[[${farmacia.descripcion}]]</td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center gap-3">
+                                                        <a th:href="@{/farmacia/modificar/{id}(id=${farmacia.id})}" class="btn btn-sm btn-outline-primary rounded-pill">
+                                                            <i class="fas fa-pencil-alt"></i> [[#{accion.actualizar}]]
+                                                        </a>
+                                                        <a th:href="@{/farmacia/eliminar/{id}(id=${farmacia.id})}" 
+                                                           class="btn btn-sm btn-outline-danger rounded-pill"
+                                                           onclick="return confirm('¿Estás seguro que deseas eliminar esta categoría?');">
+                                                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="p-4 text-center text-secondary fst-italic" th:if="${farmacias == null or farmacias.empty}">
+                                [[#{lista.vacia}]]
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Resumen total -->
+                    <div class="col-lg-4">
+                        <div class="card text-white bg-gradient rounded-4 shadow">
+                            <div class="card-body text-center py-5">
+                                <h5 class="fw-bold mb-3">[[#{categoria.total}]]</h5>
+                                <div class="display-3 fw-bold">
+                                    <i class="fas fa-clinic-medical me-2"></i> [[${totalFarmacias}]]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Botones Editar -->
+        <section th:fragment="botonesEditar" class="py-4 bg-light border-top mt-5">
+            <div class="container">
+                <div class="row g-3">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/farmacia/listado}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/farmacia/eliminar/}+${farmacia.idCategoria}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>
